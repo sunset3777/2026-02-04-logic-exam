@@ -101,26 +101,51 @@ function e(){
 e()
 function f(){
     getArray().then((data) => {
-        let industryGender
-        data.forEach((i) => {
+        let industryCount= {}
+        data.forEach((i) =>{
             let industry = i.company.industry
-            let gender = i.gender
-            if (industryGender[industry] === undefined){
-                industryGender[industry] = {};
+            let score = Number(i.company.score)
+            let maleCount = 0
+            let femaleCount = 0
+            let maleScore = 0
+            let avgMaleScore = 0
+            let femaleScore = 0
+            let avgFemaleScore =0
+        if (industryCount[industry] === undefined){
+           industryCount[industry] = {
+            '男性人數:' : 0, 
+            '女性人數:' : 0,
+            '男性產業滿意度': 0,
+            '女性產業滿意度': 0
+           };
+        }
+        if(i.gender === '男性' ){
+            industryCount[industry]['男性人數:'] += 1
+            maleCount += 1
+        }
+        else {
+            industryCount[industry]['女性人數:'] += 1
+            femaleCount += 1
+        }
+        if (industryCount[industry][score] !== 0 ){
+            if (i.gender === '男性' ){
+                maleScore += score
+                avgMaleScore = maleScore/maleCount 
+                industryCount[industry]['男性產業滿意度'] = avgMaleScore
             }
-            if (industryGender[industry][gender] === undefined){
-                industryGender[industry][gender] = 1;}
-            else{
-                industryCount[industry][gender] += 1;}
-            })
-            console.log(industryGender)
+            else {
+                femaleScore += score
+                avgFemaleScore =femaleScore/femaleCount
+                industryCount[industry]['女性產業滿意度'] = avgFemaleScore
+            }
+        }
         })
-};
+        console.log(industryCount)
+    })}
 f()
 
 function g(){
     getArray().then((data) => {
-
-
+        
     });
 }
