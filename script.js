@@ -2,7 +2,7 @@ function getArray() {
   return fetch('https://raw.githubusercontent.com/hexschool/2021-ui-frontend-job/master/frontend_data.json')
     .then((response) => response.json())
     .then((data => {
-        console.log(data[2])
+        console.log(data[0])
         return data;
       }));
       }
@@ -52,11 +52,11 @@ function c(){
         data.forEach((i) => {
             if (i.age === '26~30 歲') {
                 count +=1
-                score += Number(i.salary_score)
+                score += Number(i.company.salary_score)
             }
         })
         avg =score/count
-        console.log(`平均薪資滿意度=${avg}`)
+        console.log(`26~30 歲平均薪資滿意度=${avg}`)
     });
 }
 c()
