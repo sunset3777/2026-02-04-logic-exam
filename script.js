@@ -99,50 +99,44 @@ function e(){
     console.log(industryCount)
 })}
 e()
-function f(){
-    getArray().then((data) => {
-        let industryCount= {}
-        data.forEach((i) =>{
-            let industry = i.company.industry
-            let score = Number(i.company.score)
-            let maleCount = 0
-            let femaleCount = 0
-            let maleScore = 0
-            let avgMaleScore = 0
-            let femaleScore = 0
-            let avgFemaleScore =0
-        if (industryCount[industry] === undefined){
-           industryCount[industry] = {
-            '男性人數:' : 0, 
-            '女性人數:' : 0,
-            '男性產業滿意度': 0,
-            '女性產業滿意度': 0
-           };
-        }
-        if(i.gender === '男性' ){
-            industryCount[industry]['男性人數:'] += 1
-            maleCount += 1
-        }
-        else {
-            industryCount[industry]['女性人數:'] += 1
-            femaleCount += 1
-        }
-        if (industryCount[industry][score] !== 0 ){
-            if (i.gender === '男性' ){
-                maleScore += score
-                avgMaleScore = maleScore/maleCount 
-                industryCount[industry]['男性產業滿意度'] = avgMaleScore
-            }
-            else {
-                femaleScore += score
-                avgFemaleScore =femaleScore/femaleCount
-                industryCount[industry]['女性產業滿意度'] = avgFemaleScore
-            }
-        }
-        })
-        console.log(industryCount)
-    })}
-f()
+function f() {
+  getArray().then((data) => {
+    let industryCount = {};
+    let avgMaleScore = 0;
+    let avgFemaleScore = 0;
+    data.forEach((i) => {
+      let industry = i.company.industry;
+      let score = Number(i.company.score);
+
+      if (industryCount[industry] === undefined) {
+        industryCount[industry] = {
+          "男性人數:": 0,
+          "女性人數:": 0,
+          男性產業滿意度: 0,
+          女性產業滿意度: 0,
+
+          男性滿意度總合: 0,
+          女性滿意度總合: 0,
+        };
+      }
+      if (i.gender === "男性") {
+        industryCount[industry]["男性人數:"] += 1;
+        industryCount[industry]["男性滿意度總合"] += score;
+        industryCount[industry]["男性產業滿意度"] =
+          industryCount[industry]["男性滿意度總合"] /
+          industryCount[industry]["男性人數:"];
+      } else if (i.gender === "女性") {
+        industryCount[industry]["女性人數:"] += 1;
+        industryCount[industry]["女性滿意度總合"] += score;
+        industryCount[industry]["女性產業滿意度"] =
+          industryCount[industry]["女性滿意度總合"] /
+          industryCount[industry]["女性人數:"];
+      }
+    });
+    console.log(industryCount);
+  });
+}
+f();
 
 function g() {
   getArray().then((data) => {
