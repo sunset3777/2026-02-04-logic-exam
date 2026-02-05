@@ -2,7 +2,7 @@ function getArray() {
   return fetch('https://raw.githubusercontent.com/hexschool/2021-ui-frontend-job/master/frontend_data.json')
     .then((response) => response.json())
     .then((data => {
-        console.log(data[2])
+        console.log(data[0])
         return data;
       }));
       }
@@ -52,11 +52,11 @@ function c(){
         data.forEach((i) => {
             if (i.age === '26~30 歲') {
                 count +=1
-                score += Number(i.salary_score)
+                score += Number(i.company.salary_score)
             }
         })
         avg =score/count
-        console.log(`平均薪資滿意度=${avg}`)
+        console.log(`26~30 歲平均薪資滿意度=${avg}`)
     });
 }
 c()
@@ -99,28 +99,86 @@ function e(){
     console.log(industryCount)
 })}
 e()
-function f(){
-    getArray().then((data) => {
-        let industryGender
-        data.forEach((i) => {
-            let industry = i.company.industry
-            let gender = i.gender
-            if (industryGender[industry] === undefined){
-                industryGender[industry] = {};
-            }
-            if (industryGender[industry][gender] === undefined){
-                industryGender[industry][gender] = 1;}
-            else{
-                industryCount[industry][gender] += 1;}
-            })
-            console.log(industryGender)
-        })
-};
-f()
+function f() {
+  getArray().then((data) => {
+    let industryCount = {};
+    let avgMaleScore = 0;
+    let avgFemaleScore = 0;
+    data.forEach((i) => {
+      let industry = i.company.industry;
+      let score = Number(i.company.score);
 
-function g(){
-    getArray().then((data) => {
+      if (industryCount[industry] === undefined) {
+        industryCount[industry] = {
+          "男性人數:": 0,
+          "女性人數:": 0,
+          男性產業滿意度: 0,
+          女性產業滿意度: 0,
 
-
+          男性滿意度總合: 0,
+          女性滿意度總合: 0,
+        };
+      }
+      if (i.gender === "男性") {
+        industryCount[industry]["男性人數:"] += 1;
+        industryCount[industry]["男性滿意度總合"] += score;
+        industryCount[industry]["男性產業滿意度"] =
+          industryCount[industry]["男性滿意度總合"] /
+          industryCount[industry]["男性人數:"];
+      } else if (i.gender === "女性") {
+        industryCount[industry]["女性人數:"] += 1;
+        industryCount[industry]["女性滿意度總合"] += score;
+        industryCount[industry]["女性產業滿意度"] =
+          industryCount[industry]["女性滿意度總合"] /
+          industryCount[industry]["女性人數:"];
+      }
     });
+    console.log(industryCount);
+  });
 }
+f();
+
+function g() {
+  getArray().then((data) => {
+    let jobTenure = {};
+
+    data.forEach((i) => {
+      let tenure = i.company.job_tenure;
+      let workPlace = i.company.work;
+      let salaryScore = Number(i.company.salary_score);
+      if (jobTenure[tenure] === undefined) {
+        jobTenure[tenure] = {
+          實體辦公室的平均薪水滿意度: 0,
+          遠端工作的平均薪水滿意度: 0,
+          混合制的平均薪水滿意度: 0,
+
+          實體辦公室的總和薪水滿意度: 0,
+          遠端工作的總和薪水滿意度: 0,
+          混合制的總和薪水滿意度: 0,
+
+          遠端工作人數: 0,
+          實體辦公室人數: 0,
+          混合制人數: 0,
+        };
+      }
+      if (workPlace === "遠端工作") {
+        jobTenure[tenure]["遠端工作人數"] += 1;
+        jobTenure[tenure]["遠端工作的總和薪水滿意度"] += salaryScore;
+        jobTenure[tenure]["遠端工作的平均薪水滿意度"] =
+          jobTenure[tenure]["遠端工作的總和薪水滿意度"] / jobTenure[tenure]["遠端工作人數"];
+      } else if (workPlace === "實體辦公室") {
+        jobTenure[tenure]["實體辦公室人數"] += 1;
+        jobTenure[tenure]["實體辦公室的總和薪水滿意度"] += salaryScore;
+        jobTenure[tenure]["實體辦公室的平均薪水滿意度"] =
+          jobTenure[tenure]["實體辦公室的總和薪水滿意度"] / jobTenure[tenure]["實體辦公室人數"];
+      } else {
+        jobTenure[tenure]["混合制人數"] += 1;
+        jobTenure[tenure]["混合制的總和薪水滿意度"] += salaryScore;
+        jobTenure[tenure]["混合制的平均薪水滿意度"] =
+          jobTenure[tenure]["混合制的總和薪水滿意度"] / jobTenure[tenure]["混合制人數"];
+      }
+    });
+    console.log(jobTenure);
+  });
+}
+g();
