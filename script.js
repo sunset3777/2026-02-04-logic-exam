@@ -138,9 +138,47 @@ function f() {
 }
 f();
 
-function g(){
-    getArray().then((data) => {
+function g() {
+  getArray().then((data) => {
+    let jobTenure = {};
 
+    data.forEach((i) => {
+      let tenure = i.company.job_tenure;
+      let workPlace = i.company.work;
+      let salaryScore = Number(i.company.salary_score);
+      if (jobTenure[tenure] === undefined) {
+        jobTenure[tenure] = {
+          實體辦公室的平均薪水滿意度: 0,
+          遠端工作的平均薪水滿意度: 0,
+          混合制的平均薪水滿意度: 0,
 
+          實體辦公室的總和薪水滿意度: 0,
+          遠端工作的總和薪水滿意度: 0,
+          混合制的總和薪水滿意度: 0,
+
+          遠端工作人數: 0,
+          實體辦公室人數: 0,
+          混合制人數: 0,
+        };
+      }
+      if (workPlace === "遠端工作") {
+        jobTenure[tenure]["遠端工作人數"] += 1;
+        jobTenure[tenure]["遠端工作的總和薪水滿意度"] += salaryScore;
+        jobTenure[tenure]["遠端工作的平均薪水滿意度"] =
+          jobTenure[tenure]["遠端工作的總和薪水滿意度"] / jobTenure[tenure]["遠端工作人數"];
+      } else if (workPlace === "實體辦公室") {
+        jobTenure[tenure]["實體辦公室人數"] += 1;
+        jobTenure[tenure]["實體辦公室的總和薪水滿意度"] += salaryScore;
+        jobTenure[tenure]["實體辦公室的平均薪水滿意度"] =
+          jobTenure[tenure]["實體辦公室的總和薪水滿意度"] / jobTenure[tenure]["實體辦公室人數"];
+      } else {
+        jobTenure[tenure]["混合制人數"] += 1;
+        jobTenure[tenure]["混合制的總和薪水滿意度"] += salaryScore;
+        jobTenure[tenure]["混合制的平均薪水滿意度"] =
+          jobTenure[tenure]["混合制的總和薪水滿意度"] / jobTenure[tenure]["混合制人數"];
+      }
     });
+    console.log(jobTenure);
+  });
 }
+g();
